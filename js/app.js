@@ -12,6 +12,7 @@ var GmChar = function(thisx, thisy, imageN) {
 GmChar.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+GmChar.prototype.dimensions = {'width': 101, 'height': 83};
 //===
 
 // Enemies our player must avoid
@@ -27,7 +28,6 @@ var Enemy = function(thisx, thisy, imageN) {
 };
 
 Enemy.prototype = Object.create(GmChar.prototype);
-Enemy.prototype.dimensions = {'width': 101, 'height': 83};
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -65,7 +65,37 @@ var Player = function(thisx, thisy, imageN) {
 Player.prototype = Object.create(GmChar.prototype);
 
 Player.prototype.update = function(dt) {
+  switch (this.action) {
+    case 'left':
+      if (this.x > canvas.boundaries.left)
+        this.x -= this.dimensions.width;
+      break;
+    case 'up':
+      if (this.y > canvas.boundaries.up)
+        this.y -= this.dimensions.height;
+      break;
+    case 'right':
+      if (this.x < canvas.boundaries.right)
+        this.x += this.dimensions.width;
+      break;
+    case 'down':
+      if (this.y < canvas.boundaries.down)
+        this.y += this.dimensions.height;
+      break;
+    default:
+  }
 
+  this.action = null;
+
+  if (this.y < 25) {
+    this.reset();
+  }
+};
+
+//reset the player to original pos
+Player.prototype.reset = function() {
+  this.x = 200;
+  this.y = 400;
 };
 
 // Player.prototype.render = function() {
@@ -73,7 +103,7 @@ Player.prototype.update = function(dt) {
 // };
 
 Player.prototype.handleInput = function(keyPressed) {
-
+  this.action = keyPressed;
 };
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
