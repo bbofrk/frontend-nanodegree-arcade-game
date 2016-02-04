@@ -2,6 +2,13 @@ function getRandomInterger(min, max) {
   return Math.floor(Math.random()*(max - min + 1) + min);
 }
 
+function charCollision(object, player) {
+  return (player.x > object.x - object.dimensions.width/3 &&
+          player.x < object.x + object.dimensions.width/3 &&
+          player.y > object.y - object.dimensions.height/3 &&
+          player.y < object.y + object.dimensions.height/3);
+}
+
 //Create a game character class
 var GmChar = function(thisx, thisy, imageN) {
   this.x = thisx;
@@ -39,6 +46,10 @@ Enemy.prototype.update = function(dt) {
     else
     {
       this.x = -this.dimensions.width;
+    }
+
+    if (charCollision(this, player)) {
+      player.reset();
     }
 };
 
