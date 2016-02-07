@@ -3,10 +3,10 @@ function getRandomInterger(min, max) {
 }
 
 function charCollision(object, player) {
-  return (player.x > object.x - object.dimensions.width/3 &&
-          player.x < object.x + object.dimensions.width/3 &&
-          player.y > object.y - object.dimensions.height/3 &&
-          player.y < object.y + object.dimensions.height/3);
+  return (player.x > object.x - object.dimensions.width/2 &&
+          player.x < object.x + object.dimensions.width/2 &&
+          player.y > object.y - object.dimensions.height/2 &&
+          player.y < object.y + object.dimensions.height/2);
 }
 
 //Create a game character class
