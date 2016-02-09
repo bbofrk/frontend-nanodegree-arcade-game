@@ -1,12 +1,19 @@
+// get a random integer from a range
 function getRandomInterger(min, max) {
   return Math.floor(Math.random()*(max - min + 1) + min);
 }
 
+// check for collison between game characters
 function charCollision(object, player) {
   return (player.x > object.x - object.dimensions.width/2 &&
           player.x < object.x + object.dimensions.width/2 &&
           player.y > object.y - object.dimensions.height/2 &&
           player.y < object.y + object.dimensions.height/2);
+}
+
+// select a random elemet from an array
+function randomElement(fromArray) {
+  return fromArray[Math.floor(Math.random() * fromArray.length)];
 }
 
 //Create a game character class
@@ -35,6 +42,7 @@ var Enemy = function(thisx, thisy, imageN) {
 };
 
 Enemy.prototype = Object.create(GmChar.prototype);
+Enemy.prototype.yPos = [60, 151, 234];
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -45,7 +53,9 @@ Enemy.prototype.update = function(dt) {
       this.x += this.speed*dt;
     else
     {
+      this.speed = getRandomInterger(100, 200);
       this.x = -this.dimensions.width;
+      this.y = randomElement(this.yPos);
     }
 
     if (charCollision(this, player)) {
@@ -99,6 +109,8 @@ Player.prototype.update = function(dt) {
   this.action = null;
 
   if (this.y < 25) {
+    this.score += 1;
+    this.updateScore();
     this.reset();
   }
 };
@@ -116,10 +128,18 @@ Player.prototype.reset = function() {
 Player.prototype.handleInput = function(keyPressed) {
   this.action = keyPressed;
 };
+
+Player.prototype.score = 0;
+
+Player.prototype.updateScore = function() {
+  $('#score').text(this.score);
+};
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
   new Enemy(-100, 68),
+  new Enemy(-100, 151),
+  new Enemy(-100, 234),
 ];
 // Place the player object in a variable called player
 var player = new Player();
