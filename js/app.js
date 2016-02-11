@@ -5,10 +5,10 @@ function getRandomInterger(min, max) {
 
 // check for collison between game characters
 function charCollision(object, player) {
-  return (player.x > object.x - object.dimensions.width/2 &&
-          player.x < object.x + object.dimensions.width/2 &&
-          player.y > object.y - object.dimensions.height/2 &&
-          player.y < object.y + object.dimensions.height/2);
+  return (player.x > object.x - object.dimensions.WIDTH/2 &&
+          player.x < object.x + object.dimensions.WIDTH/2 &&
+          player.y > object.y - object.dimensions.HEIGHT/2 &&
+          player.y < object.y + object.dimensions.HEIGHT/2);
 }
 
 // select a random elemet from an array
@@ -26,7 +26,7 @@ var GmChar = function(thisx, thisy, imageN) {
 GmChar.prototype.render = function() {
   ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
-GmChar.prototype.dimensions = {'width': 101, 'height': 83};
+GmChar.prototype.dimensions = {'WIDTH': 101, 'HEIGHT': 83};
 //===
 
 // Enemies our player must avoid
@@ -55,7 +55,7 @@ Enemy.prototype.update = function(dt) {
     else
     {
       this.speed = getRandomInterger(100, 200);
-      this.x = -this.dimensions.width;
+      this.x = -this.dimensions.WIDTH;
       this.y = randomElement(this.yPos);
     }
 
@@ -91,19 +91,19 @@ Player.prototype.update = function(dt) {
   switch (this.action) {
     case 'left':
       if (this.x > canvas.boundaries.left)
-        this.x -= this.dimensions.width;
+        this.x -= this.dimensions.WIDTH;
       break;
     case 'up':
       if (this.y > canvas.boundaries.up)
-        this.y -= this.dimensions.height;
+        this.y -= this.dimensions.HEIGHT;
       break;
     case 'right':
       if (this.x < canvas.boundaries.right)
-        this.x += this.dimensions.width;
+        this.x += this.dimensions.WIDTH;
       break;
     case 'down':
       if (this.y < canvas.boundaries.down)
-        this.y += this.dimensions.height;
+        this.y += this.dimensions.HEIGHT;
       break;
     default:
   }
