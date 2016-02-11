@@ -43,6 +43,7 @@ var Enemy = function(thisx, thisy, imageN) {
 
 Enemy.prototype = Object.create(GmChar.prototype);
 Enemy.prototype.yPos = [60, 151, 234];
+Enemy.prototype.pictures = [60, 151, 234];
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -50,7 +51,7 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     if (this.x <= canvas.width + (this.speed*dt))
-      this.x += this.speed*dt;
+      this.x += (this.speed + player.getDifficulty()) *dt;
     else
     {
       this.speed = getRandomInterger(100, 200);
@@ -86,6 +87,7 @@ var Player = function(thisx, thisy, imageN) {
 Player.prototype = Object.create(GmChar.prototype);
 
 Player.prototype.update = function(dt) {
+  //change the x depending on the input also make sure its within the canvas
   switch (this.action) {
     case 'left':
       if (this.x > canvas.boundaries.left)
@@ -111,6 +113,7 @@ Player.prototype.update = function(dt) {
   if (this.y < 25) {
     this.score += 1;
     this.updateScore();
+    this.updateDifficulty();
     this.reset();
   }
 };
@@ -121,10 +124,6 @@ Player.prototype.reset = function() {
   this.y = 400;
 };
 
-// Player.prototype.render = function() {
-//
-// };
-
 Player.prototype.handleInput = function(keyPressed) {
   this.action = keyPressed;
 };
@@ -134,6 +133,49 @@ Player.prototype.score = 0;
 Player.prototype.updateScore = function() {
   $('#score').text(this.score);
 };
+
+Player.prototype.getDifficulty = function() {
+  var difMultiplier = 25;
+  //Change the difficulty
+  return this.score * difMultiplier;
+};
+
+Player.prototype.updateDifficulty = function() {
+  var difficulty = Math.round(this.getDifficulty() / 100);
+  $('#difficulty').text(difficulty);
+};
+
+//Gem class
+var Gem = function(thisx, thisy, imageN) {
+    // Variables applied to each of our instances go here,
+    // we've provided one for you to get started
+
+    // The image/sprite for our player, this uses
+    // a helper we've provided to easily load images
+    sprite = imageN || encodeURI('images/Gem-Green.png');
+    console.log(sprite);
+    x = thisx || 200;
+    y = thisy || 68;
+    GmChar.call(this, x, y, sprite);
+};
+Gem.prototype = Object.create(GmChar.prototype);
+Gem.prototype.posX = [-2, 99, 200, 301, 402];
+Gem.prototype.posY = [60, 151, 234];
+Gem.prototype.pictures = ['Gem-Green', 'Gem-Blue', 'Gem-Orange', 'Heart', 'Star'];
+Gem.prototype.update = function(dt) {
+    //if the player collects the gem
+    if (charCollision(this, player)) {
+      this.x = randomElement(this.posX);
+      this.y = randomElement(this.posY);
+      var randomPic = randomElement(this.pictures);
+      //Make sure that the Gem is random
+      this.sprite = encodeURI('images/' + randomPic + '.png');
+      player.score += 2;
+      player.updateScore();
+      player.updateDifficulty();
+    }
+};
+//===
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 var allEnemies = [
@@ -143,6 +185,7 @@ var allEnemies = [
 ];
 // Place the player object in a variable called player
 var player = new Player();
+var gem = new Gem();
 
 
 // This listens for key presses and sends the keys to your
